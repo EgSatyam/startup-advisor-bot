@@ -1,0 +1,16 @@
+# Render.com deployment configuration
+# This file helps with automatic deployment to Render
+
+services:
+  - type: web
+    name: startup-advisor-bot-api
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node dev-server.js
+    healthCheckPath: /health
+    envVars:
+      - key: GOOGLE_GEMINI_API_KEY
+        scope: build
+      - key: NODE_ENV
+        value: production

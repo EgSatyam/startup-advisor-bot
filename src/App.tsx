@@ -111,12 +111,12 @@ function App() {
               >
                 Product-Market Fit
               </button>
-              <button 
-                className="chip"
+              {/* <button  */}
+                {/* className="chip"
                 onClick={() => handleSendMessage("How should I structure my founding team?")}
               >
-                Team Structure
-              </button>
+                Team Structure */}
+              {/* </button> */}
             </div>
           </div>
         )}
