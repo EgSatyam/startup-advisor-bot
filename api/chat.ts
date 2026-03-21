@@ -39,51 +39,60 @@ export default async function handler(
   }
 
   // Check for API key
-  const apiKey = process.env.GROQ_API_KEY
+  const apiKey = process.env.GOOGLE_GEMINI_API_KEY
   if (!apiKey) {
-    console.error('GROQ_API_KEY not configured')
+    console.error('GOOGLE_GEMINI_API_KEY not configured')
     res.statusCode = 500
     res.end(JSON.stringify({ 
-      error: 'API configuration error. Please ensure GROQ_API_KEY is set.' 
+      error: 'API configuration error. Please ensure GOOGLE_GEMINI_API_KEY is set.' 
     }))
     return
   }
 
   try {
-    // Build messages array for Groq
-    const messages = [
-      {
-        role: 'system',
-        content: SYSTEM_PROMPT
-      },
-      ...conversationHistory.map((msg: any) => ({
-        role: msg.role,
-        content: msg.content
-      })),
-      {
-        role: 'user',
-        content: message
-      }
-    ]
+    // Build prompt for Gemini
+    const conversationText = conversationHistory
+      .map((msg: any) => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`)
+      .join('\n\n')
 
-    // Call Groq API
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model: 'llama-3.1-70b-versatile',
-        messages,
-        max_tokens: 1000,
-        temperature: 0.7
-      })
-    })
+    const fullPrompt = conversationText 
+      ? `${conversationText}\n\nUser: ${message}`
+      : `${SYSTEM_PROMPT}\n\nUser: ${message}`
+
+    // Call Google Gemini API
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          system_instruction: {
+            parts: {
+              text: SYSTEM_PROMPT
+            }
+          },
+          contents: [
+            {
+              parts: [
+                {
+                  text: message
+                }
+              ]
+            }
+          ],
+          generationConfig: {
+            maxOutputTokens: 1000,
+            temperature: 0.7,
+          }
+        })
+      }
+    )
 
     if (!response.ok) {
       const errorData = await response.json() as any
-      console.error('Groq API error:', errorData)
+      console.error('Gemini API error:', errorData)
       
       if (response.status === 401) {
         res.statusCode = 401
@@ -99,7 +108,7 @@ export default async function handler(
     }
 
     const data = await response.json() as any
-    const assistantMessage = data.choices[0]?.message?.content
+    const assistantMessage = data.candidates?.[0]?.content?.parts?.[0]?.text
 
     if (!assistantMessage) {
       res.statusCode = 500
