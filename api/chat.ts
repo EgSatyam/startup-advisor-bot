@@ -74,7 +74,7 @@ export default async function handler(
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: 'mixtral-8x7b-32768',
+        model: 'llama-3.1-70b-versatile',
         messages,
         max_tokens: 1000,
         temperature: 0.7
