@@ -39,18 +39,18 @@ export default async function handler(
   }
 
   // Check for API key
-  const apiKey = process.env.OPENAI_API_KEY
+  const apiKey = process.env.GROQ_API_KEY
   if (!apiKey) {
-    console.error('OPENAI_API_KEY not configured')
+    console.error('GROQ_API_KEY not configured')
     res.statusCode = 500
     res.end(JSON.stringify({ 
-      error: 'API configuration error. Please ensure OPENAI_API_KEY is set.' 
+      error: 'API configuration error. Please ensure GROQ_API_KEY is set.' 
     }))
     return
   }
 
   try {
-    // Build messages array for OpenAI
+    // Build messages array for Groq
     const messages = [
       {
         role: 'system',
@@ -66,15 +66,15 @@ export default async function handler(
       }
     ]
 
-    // Call OpenAI API
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    // Call Groq API
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
+        model: 'mixtral-8x7b-32768',
         messages,
         max_tokens: 1000,
         temperature: 0.7
@@ -83,7 +83,7 @@ export default async function handler(
 
     if (!response.ok) {
       const errorData = await response.json() as any
-      console.error('OpenAI API error:', errorData)
+      console.error('Groq API error:', errorData)
       
       if (response.status === 401) {
         res.statusCode = 401

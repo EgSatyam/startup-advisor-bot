@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
 import './App.css'
-import ChatMessage from './components/ChatMessage'
-import ChatInput from './components/ChatInput'
-import LoadingSpinner from './components/LoadingSpinner'
-import ErrorMessage from './components/ErrorMessage'
+import ChatMessage from './components/ChatMessage.tsx'
+import ChatInput from './components/ChatInput.tsx'
+import LoadingSpinner from './components/LoadingSpinner.tsx'
+import ErrorMessage from './components/ErrorMessage.tsx'
 
 export interface Message {
   id: string
