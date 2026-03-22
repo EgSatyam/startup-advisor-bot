@@ -1,6 +1,6 @@
 # 📈 Startup Advisor - AI-Powered Chatbot
 
-An intelligent chatbot designed to provide expert guidance on startup strategy, fundraising, product development, and scaling. Built with React, Vite, and OpenAI's GPT models.
+An intelligent chatbot designed to provide expert guidance on startup strategy, fundraising, product development, and scaling. Built with React, Vite, and Gemini models.
 
 ## 🎯 What This Is
 
@@ -30,7 +30,7 @@ Many startup founders struggle to get expert advice without expensive consultant
 
 - Node.js 16+
 - npm or yarn
-- OpenAI API key ([get one here](https://platform.openai.com/api-keys))
+- Gemini API key
 
 ### Installation
 
@@ -45,8 +45,8 @@ npm install
 # Create environment file
 cp .env.example .env.local
 
-# Add your OpenAI API key to .env.local
-# OPENAI_API_KEY=your-key-here
+# Add your Gemini API key to .env.local
+# Gemini_API_KEY=your-key-here
 ```
 
 ### Development
@@ -107,7 +107,7 @@ This project demonstrates several UX considerations:
 
 ## 🔌 API Integration
 
-The chatbot uses OpenAI's GPT-4 API through a Vercel serverless function:
+The chatbot uses Gemini API through a Vercel serverless function:
 
 ```typescript
 // Example API request
@@ -127,7 +127,7 @@ POST /api/chat
 
 1. Push code to GitHub
 2. Connect to Vercel via vercel.com
-3. Add `OPENAI_API_KEY` as an environment variable in Vercel
+3. Add `Gemini_API_KEY` as an environment variable in Vercel
 4. Deploy!
 
 ```bash
@@ -141,7 +141,7 @@ vercel
 Create a `.env.local` file in the project root:
 
 ```
-OPENAI_API_KEY=your-api-key-here
+Gemini_API_KEY=your-api-key-here
 ```
 
 Never commit `.env.local` to version control.
@@ -150,7 +150,7 @@ Never commit `.env.local` to version control.
 
 - **Frontend**: React 19 + TypeScript + Vite
 - **Styling**: CSS3 with custom properties
-- **API**: OpenAI GPT-4 via Vercel serverless functions
+- **API**: Gemini via Vercel serverless functions
 - **Deployment**: Vercel
 - **Build Tool**: Vite (fast, modern bundler)
 
@@ -158,11 +158,8 @@ Never commit `.env.local` to version control.
 
 ### Model Selection
 
-The default model is `gpt-4-turbo`. To change it, edit `api/chat.ts` line 59:
+The default model is `Gemmini`. To change it, edit `api/chat.ts` line 59:
 
-```typescript
-model: 'gpt-4-turbo', // Change to 'gpt-3.5-turbo' for faster/cheaper responses
-```
 
 ### System Prompt
 
