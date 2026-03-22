@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import type { IncomingMessage } from 'http'
 
 const API_PORT = process.env.API_PORT || '3001'
 const API_URL = process.env.VITE_API_URL || `http://localhost:${API_PORT}`
@@ -13,8 +14,8 @@ export default defineConfig({
         target: API_URL,
         changeOrigin: true,
         rewrite: (path) => path,
-        configure: (proxy, options) => {
-          proxy.on('error', (err, req, res) => {
+        configure: (proxy) => {
+          proxy.on('error', (err, _req: IncomingMessage, res: any) => {
             console.error('❌ Proxy connection error:', err.message)
             console.error(`   Failed to connect to API server on ${API_URL}`)
             console.error('   Make sure dev-server.js is running')
@@ -25,11 +26,11 @@ export default defineConfig({
               solution: 'Run: node dev-server.js'
             }))
           })
-          proxy.on('proxyReq', (proxyReq, req, res) => {
+          proxy.on('proxyReq', (_proxyReq, req: IncomingMessage, _res: any) => {
             const timestamp = new Date().toISOString()
             console.log(`[${timestamp}] → ${req.method} ${req.url}`)
           })
-          proxy.on('proxyRes', (proxyRes, req, res) => {
+          proxy.on('proxyRes', (proxyRes, _req: any, _res: any) => {
             const timestamp = new Date().toISOString()
             console.log(`[${timestamp}] ← ${proxyRes.statusCode}`)
           })
